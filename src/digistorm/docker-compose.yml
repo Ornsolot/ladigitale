@@ -1,0 +1,18 @@
+version: "3"
+services:  
+  digiboard:
+    image: digiboard
+    container_name: digiboard
+    ports:
+      - 4012:4012
+    volumes:
+      - ./src:/app/
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

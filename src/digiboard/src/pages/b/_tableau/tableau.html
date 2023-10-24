@@ -1,0 +1,502 @@
+<div id="page" @mouseup="selectionnerFin" @touchend="selectionnerFin">
+
+    <div id="tableau">
+        <v-stage ref="stage" :config="{x: 0, y: 0, scaleX: 1, scaleY: 1, width: largeur, height: hauteur, draggable: false}" @mousedown="selectionnerDebut" @touchstart="selectionnerDebut" @mousemove="selectionnerMouvement" @touchmove="selectionnerMouvement" @mouseup="selectionnerFin" @touchend="selectionnerFin">
+            <v-layer ref="objets">
+                <template v-for="(item, indexItem) in items[page]">
+                    <v-rect :config="item" v-if="item.objet === 'rectangle' || item.objet === 'rectangle-plein' || item.objet === 'surlignage'" @dragstart="selectionnerObjet" @dragend="deplacerFin" @transformend="redimensionnerFin" :key="'rectangle_' + indexItem" />
+                    <v-ellipse :config="item" v-else-if="item.objet === 'cercle' || item.objet === 'cercle-plein'" @dragend="deplacerFin" @transformend="redimensionnerFin" :key="'cercle_' + indexItem" @dragstart="selectionnerObjet" />
+                    <v-star :config="item" v-else-if="item.objet === 'etoile'" @dragstart="selectionnerObjet" @dragend="deplacerFin" @transformend="redimensionnerFin" :key="'etoile_' + indexItem" />
+                    <v-line :config="item" v-else-if="item.objet === 'ligne'" @dragstart="selectionnerObjet" @dragmove="deplacerLigne" @dragend="deplacerFin" :key="'ligne_' + indexItem" />
+                    <v-arrow :config="item" v-else-if="item.objet === 'fleche'" @dragstart="selectionnerObjet" @dragmove="deplacerLigne" @dragend="deplacerFin" :key="'fleche_' + indexItem" />
+                    <v-circle :config="item" v-else-if="item.objet === 'ancre'" @dragstart="selectionnerObjet" @dragmove="deplacerAncre" @dragend="deplacerFin" :key="'ancre_' + indexItem" />
+                    <v-text :config="item" v-else-if="item.objet === 'texte'" @dragstart="selectionnerObjet" @dragend="deplacerFin" @dblclick="modifierTexte" @dbltap="modifierTexte" @transformend="redimensionnerFin" :key="'texte_' + indexItem" />
+                    <v-label :config="item" v-else-if="item.objet === 'label'" @dragstart="selectionnerObjet" @dragend="deplacerFin" @dblclick="modifierTexte" @dbltap="modifierTexte" @transformend="redimensionnerFin" :key="'label_' + indexItem">
+                        <v-tag :config="item.tag" />
+                        <v-text :config="item.text" />
+                    </v-label>
+                    <v-image :config="item" v-else-if="item.objet === 'image' && item.hasOwnProperty('image') && item.fichier !== ''" @dragstart="selectionnerObjet" @dragend="deplacerFin" @transformend="redimensionnerFin" :key="'image_' + indexItem" />
+                    <v-line :config="item" v-else-if="item.objet === 'dessin'" @dragstart="selectionnerObjet" :key="'dessin_' + indexItem" />
+                </template>
+                <v-rect :config="{name: 'selection', fill: 'rgba(1, 206, 209, 0.2)', visible: (admin || statutUtilisateur === 'editeur' || options.edition === 'ouverte') && selection, x: positionSelectionX, y: positionSelectionY, width: largeurSelection, height: hauteurSelection}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-rect :config="{name: 'objet-rectangle', fill: 'transparent', visible: creation && outil === 'rectangle', x: positionObjetX, y: positionObjetY, width: largeurObjet, height: hauteurObjet, stroke: '#ff0000', strokeWidth: 3, dash: [7, 5]}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-rect :config="{name: 'objet-rectangle', fill: '#cccccc', visible: creation && outil === 'rectangle-plein', x: positionObjetX, y: positionObjetY, width: largeurObjet, height: hauteurObjet}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-ellipse :config="{name: 'objet-cercle', fill: 'transparent', visible: creation && outil === 'cercle', x: positionObjetX + (largeurObjet / 2), y: positionObjetY + (hauteurObjet / 2), width: largeurObjet, height: hauteurObjet, stroke: '#ff0000', strokeWidth: 3, dash: [7, 5]}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-ellipse :config="{name: 'objet-cercle', fill: '#cccccc', visible: creation && outil === 'cercle-plein', x: positionObjetX + (largeurObjet / 2), y: positionObjetY + (hauteurObjet / 2), width: largeurObjet, height: hauteurObjet}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-rect :config="{name: 'objet-surlignage', fill: '#ffff00', opacity: 0.5, visible: creation && outil === 'surlignage', x: positionObjetX, y: positionObjetY, width: largeurObjet, height: hauteurObjet}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-line :config="{name: 'objet-ligne', fill: '#ff0000', visible: creation && outil === 'ligne', x: 0, y: 0, points: [positionX1, positionY1, positionX2, positionY2], fill: '#ff0000', stroke: '#ff0000', strokeWidth: 3}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-arrow :config="{name: 'objet-fleche', fill: '#ff0000', visible: creation && outil === 'fleche', x: 0, y: 0, points: [positionX1, positionY1, positionX2, positionY2], pointerLength: 25, pointerWidth: 20, fill: '#ff0000', stroke: '#ff0000', strokeWidth: 3}" @dragend="deplacerFin" @transformend="redimensionnerFin" />
+                <v-transformer ref="transformer" :config="{anchorStroke: '#000000', anchorFill: '#ffff00', anchorSize: 10 / echelle, anchorCornerRadius: 10 / echelle, borderStroke: definirCouleurBordure(), borderDash: [3, 3], borderStrokeWidth: 1 / echelle, enabledAnchors: definirAncres(), padding: 7.5 / echelle, rotateEnabled: definirRotation(), rotationSnaps: [0, 90, 180, 270], keepRatio: true, boundBoxFunc: definirLimites}" />
+            </v-layer>
+        </v-stage>
+    </div>
+
+    <a id="logo" href="/">
+        <span />
+    </a>
+
+    <div id="outils" v-if="admin || statutUtilisateur === 'editeur' || options.edition === 'ouverte'">
+        <span class="outil historique" :title="$t('defaire')" @click="defaire">
+            <img src="~@/assets/img/defaire.png" :alt="$t('defaire')">
+        </span>
+        <span class="outil historique" :title="$t('refaire')" @click="refaire">
+            <img src="~@/assets/img/refaire.png" :alt="$t('refaire')">
+        </span>
+        <span class="separateur" />
+        <span class="outil" :title="$t('selectionner')" :class="{'actif': outilSelectionner}" @click="definirOutilPrincipal('selectionner')">
+            <img src="~@/assets/img/curseur.png" :alt="$t('selectionner')">
+        </span>
+        <span class="outil" :title="$t('dessiner')" :class="{'actif': outilDessiner}" @click="definirOutilPrincipal('dessiner')">
+            <img src="~@/assets/img/stylo.png" :alt="$t('dessiner')">
+        </span>
+        <span class="separateur" />
+        <span id="outil-rectangle" class="outil" :title="$t('rectangle')" :class="{'actif': outilSelectionner && outil === 'rectangle'}" @click="selectionnerOutil('rectangle')">
+            <img src="~@/assets/img/rectangle.png" :alt="$t('rectangle')">
+        </span>
+        <span id="outil-rectangle-plein" class="outil" :title="$t('rectanglePlein')" :class="{'actif': outilSelectionner && outil === 'rectangle-plein'}" @click="selectionnerOutil('rectangle-plein')">
+            <img src="~@/assets/img/rectangle-plein.png" :alt="$t('rectanglePlein')">
+        </span>
+        <span id="outil-cercle" class="outil" :title="$t('cercle')" :class="{'actif': outilSelectionner && outil === 'cercle'}" @click="selectionnerOutil('cercle')">
+            <img src="~@/assets/img/cercle.png" :alt="$t('cercle')">
+        </span>
+        <span id="outil-cercle-plein" class="outil" :title="$t('cerclePlein')" :class="{'actif': outilSelectionner && outil === 'cercle-plein'}" @click="selectionnerOutil('cercle-plein')">
+            <img src="~@/assets/img/cercle-plein.png" :alt="$t('cerclePlein')">
+        </span>
+        <span id="outil-etoile" class="outil" :title="$t('etoile')" :class="{'actif': outilSelectionner && outil === 'etoile'}" @click="selectionnerOutil('etoile')">
+            <img src="~@/assets/img/etoile.png" :alt="$t('etoile')">
+        </span>
+        <span id="outil-surlignage" class="outil" :title="$t('surlignage')" :class="{'actif': outilSelectionner && outil === 'surlignage'}" @click="selectionnerOutil('surlignage')">
+            <img src="~@/assets/img/surligneur.png" :alt="$t('surlignage')">
+        </span>
+        <span id="outil-ligne" class="outil" :title="$t('ligne')" :class="{'actif': outilSelectionner && outil === 'ligne'}" @click="selectionnerOutil('ligne')">
+            <img src="~@/assets/img/ligne.png" :alt="$t('ligne')">
+        </span>
+        <span id="outil-fleche" class="outil" :title="$t('fleche')" :class="{'actif': outilSelectionner && outil === 'fleche'}" @click="selectionnerOutil('fleche')">
+            <img src="~@/assets/img/fleche.png" :alt="$t('fleche')">
+        </span>
+        <span id="outil-texte" class="outil" :title="$t('texte')" :class="{'actif': outilSelectionner && outil === 'texte'}" @click="selectionnerOutil('texte')">
+            <img src="~@/assets/img/texte.png" :alt="$t('texte')">
+        </span>
+        <span id="outil-label" class="outil" :title="$t('label')" :class="{'actif': outilSelectionner && outil === 'label'}" @click="selectionnerOutil('label')">
+            <img src="~@/assets/img/label.png" :alt="$t('label')">
+        </span>
+        <label id="outil-image" for="televerser-image" class="outil" :title="$t('image')" @click="selectionnerOutil('image')">
+            <img src="~@/assets/img/image.png" :alt="$t('image')">
+        </label>
+        <input type="file" id="televerser-image" @change="televerserImage($event.target, 'change')" style="display: none" accept=".jpg, .jpeg, .png, .gif, .svg">
+        <span class="separateur" />
+        <span class="outil" :title="$t('debloquerTableau')" v-if="!admin" @click="modale = 'debloquer-tableau'">
+            <img src="~@/assets/img/cle.png" :alt="$t('debloquerTableau')">
+        </span>
+        <span class="outil" :title="$t('parametres')" v-if="admin" @click="menu = 'parametres'">
+            <img src="~@/assets/img/parametres.png" :alt="$t('parametres')">
+        </span>
+        <span class="outil" :title="$t('reinitialiser')" v-if="admin" @click="afficherReinitialiser">
+            <img src="~@/assets/img/reinitialiser.png" :alt="$t('reinitialiser')">
+        </span>
+    </div>
+
+    <div id="outils" v-else>
+        <span class="outil" :title="$t('debloquerTableau')" @click="modale = 'debloquer-tableau'">
+            <img src="~@/assets/img/cle.png" :alt="$t('debloquerTableau')">
+        </span>
+    </div>
+
+    <div id="options" :class="{'multipage': options.multipage === 'oui'}" v-if="(admin || statutUtilisateur === 'editeur' || options.edition === 'ouverte') && (nom !== '' || !outilSelectionner)">
+        <span class="option icone" :title="$t('verrouiller')" v-if="outilSelectionner && !objetVerrouille && objet !== 'dessin'" @click="verrouiller">
+            <span><i class="material-icons">lock</i></span>
+        </span>
+        <span class="option icone orange" :title="$t('deverrouiller')" v-else-if="outilSelectionner && objetVerrouille && objet !== 'dessin'" @click="deverrouiller">
+            <span><i class="material-icons">lock_open</i></span>
+        </span>
+        <span class="option icone" :title="$t('mettreDevant')" v-if="outilSelectionner && objet !== 'selection'" @click="mettreDevant">
+            <span><i class="material-icons">flip_to_front</i></span>
+        </span>
+        <span class="option icone" :title="$t('mettreDerriere')" v-if="outilSelectionner && objet !== 'selection'" @click="mettreDerriere">
+            <span><i class="material-icons">flip_to_back</i></span>
+        </span>
+        <span class="separateur" v-if="outilSelectionner && objet !== 'image'" />
+        <span class="option noir" :title="$t('noir')" :class="{'actif': outilDessiner && couleurStylo === '#000000'}" @click="modifierCouleur('#000000')" v-if="nom !== 'selection' && objet !== 'image' && objet !== 'label'">
+            <span class="couleur noir" />
+        </span>
+        <span class="option blanc" :title="$t('blanc')" :class="{'actif': outilDessiner && couleurStylo === '#ffffff'}" @click="modifierCouleur('#ffffff')" v-if="nom !== 'selection' && objet !== 'image' && objet !== 'label'">
+            <span class="couleur blanc" />
+        </span>
+        <span class="option rouge" :title="$t('rouge')" :class="{'actif': outilDessiner && couleurStylo === '#ff0000'}" @click="modifierCouleur('#ff0000')" v-if="nom !== 'selection' && objet !== 'image'">
+            <span class="couleur rouge" />
+        </span>
+        <span class="option jaune" :title="$t('jaune')" :class="{'actif': outilDessiner && couleurStylo === '#ffff00'}" @click="modifierCouleur('#ffff00')" v-if="nom !== 'selection' && objet !== 'image'">
+            <span class="couleur jaune" />
+        </span>
+        <span class="option vert" :title="$t('vert')" :class="{'actif': outilDessiner && couleurStylo === '#00ff00'}" @click="modifierCouleur('#00ff00')" v-if="nom !== 'selection' && objet !== 'image'">
+            <span class="couleur vert" />
+        </span>
+        <span class="option bleu" :title="$t('bleu')" :class="{'actif': outilDessiner && couleurStylo === '#04fdff'}" @click="modifierCouleur('#04fdff')" v-if="nom !== 'selection' && objet !== 'image'">
+            <span class="couleur bleu" />
+        </span>
+        <span class="option icone" v-if="nom !== 'selection' && objet !== 'image'" @click="definirCouleur">
+            <label for="couleur-selecteur"><i class="material-icons">colorize</i></label>
+            <input type="color" id="couleur-selecteur" :value="couleurSelecteur" :title="$t('selectionnerCouleur')">
+        </span>
+        <span class="separateur" v-if="outilDessiner" />
+        <span class="option label-epaisseur" v-if="outilDessiner">
+            <span><i class="material-icons">line_weight</i></span>
+        </span>
+        <span class="option epaisseur" :class="{'actif': epaisseurStylo === 2}" v-if="outilDessiner" @click="modifierEpaisseur(2)">
+            <span>2</span>
+        </span>
+        <span class="option epaisseur" :class="{'actif': epaisseurStylo === 5}" v-if="outilDessiner" @click="modifierEpaisseur(5)">
+            <span>5</span>
+        </span>
+        <span class="option epaisseur" :class="{'actif': epaisseurStylo === 10}" v-if="outilDessiner" @click="modifierEpaisseur(10)">
+            <span>10</span>
+        </span>
+        <span class="option epaisseur" :class="{'actif': epaisseurStylo === 20}" v-if="outilDessiner" @click="modifierEpaisseur(20)">
+            <span>20</span>
+        </span>
+        <span class="option epaisseur" :class="{'actif': epaisseurStylo === 40}" v-if="outilDessiner" @click="modifierEpaisseur(40)">
+            <span>40</span>
+        </span>
+        <span class="option epaisseur" :class="{'actif': epaisseurStylo === 80}" v-if="outilDessiner" @click="modifierEpaisseur(80)">
+            <span>80</span>
+        </span>
+        <span class="separateur" v-if="outilSelectionner && nom !== 'selection'" />
+        <span class="option label-taille" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'">
+            <span><i class="material-icons">format_size</i></span>
+        </span>
+        <span class="option icone" :title="$t('reduireTaille')" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'" @click="reduireTailleTexte">
+            <span><i class="material-icons">remove</i></span>
+        </span>
+        <span class="option icone" :title="$t('augmenterTaille')" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'" @click="augmenterTailleTexte">
+            <span><i class="material-icons">add</i></span>
+        </span>
+        <span class="option icone" :title="$t('alignerGauche')" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'" @click="alignerTexte('left')">
+            <span><i class="material-icons">format_align_left</i></span>
+        </span>
+        <span class="option icone" :title="$t('centrer')" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'" @click="alignerTexte('center')">
+            <span><i class="material-icons">format_align_center</i></span>
+        </span>
+        <span class="option icone" :title="$t('alignerDroite')" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'" @click="alignerTexte('right')">
+            <span><i class="material-icons">format_align_right</i></span>
+        </span>
+        <span class="separateur" v-if="outilSelectionner && nom !== 'selection' && objet === 'texte'" />
+        <span class="option label-filtre" v-if="outilSelectionner && nom !== 'selection' && objet === 'image'">
+            <span><i class="material-icons">auto_awesome</i></span>
+        </span>
+        <select class="option selecteur" :value="definirFiltre()" @change="modifierFiltre($event.target.value)" v-if="outilSelectionner && nom !== 'selection' && objet === 'image'">
+            <option :value="'Aucun'">{{ $t('aucunFiltre') }}</option>
+            <option :value="'Pixelate'">{{ $t('pixelise') }}</option>
+            <option :value="'Grayscale'">{{ $t('noirEtBlanc') }}</option>
+            <option :value="'Invert'">{{ $t('inverse') }}</option>
+            <option :value="'Sepia'">{{ $t('sepia') }}</option>
+            <option :value="'Solarize'">{{ $t('solarise') }}</option>
+        </select>
+        <span class="separateur" v-if="outilSelectionner && nom !== 'selection' && objet === 'image'" />
+        <span class="option icone" :title="$t('dupliquer')" v-if="outilSelectionner && nom !== 'selection'" @click="dupliquer">
+            <span><i class="material-icons">content_copy</i></span>
+        </span>
+        <span class="option icone rouge" :title="$t('supprimer')" v-if="outilSelectionner && nom !== 'selection'" @click="supprimer('objet')">
+            <span><i class="material-icons">delete</i></span>
+        </span>
+        <span class="option icone rouge" :title="$t('supprimer')" v-else-if="outilSelectionner && nom === 'selection'" @click="supprimerSelection">
+            <span><i class="material-icons">delete</i></span>
+        </span>
+    </div>
+
+    <div id="pages" v-if="options.multipage === 'oui'">
+        <span class="icone" :title="$t('afficherPagePrecedente')" @click="afficherPagePrecedente"><i class="material-icons">navigate_before</i></span>
+        <span class="texte" :title="$t('gererPages')" @click="menu = 'pages'">{{ page + 1 }} / {{ items.length }}</span>
+        <span class="icone" :title="$t('afficherPageSuivante')" @click="afficherPageSuivante"><i class="material-icons">navigate_next</i></span>
+    </div>
+
+    <div id="utilisateurs" :title="$t('utilisateursConnectes')" @click="gererMenuUtilisateurs">
+        <span class="icone"><i class="material-icons">people_alt</i></span>
+        <span class="badge">{{ utilisateurs.length }}</span>
+    </div>
+
+    <div id="texte" class="conteneur-modale" v-if="modale === 'texte'">
+        <div class="modale">
+            <div class="conteneur">
+                <div class="contenu">
+                    <textarea :value="texte" @input="texte = $event.target.value" :placeholder="$t('monTexte')" />
+                    <div class="actions">
+                        <span class="bouton" role="button" tabindex="0" @click="fermerModaleTexte">{{ $t('annuler') }}</span>
+                        <span class="bouton" role="button" tabindex="0" @click="ajouterTexte" v-if="outil === 'texte' || outil === 'label'">{{ $t('valider') }}</span>
+                        <span class="bouton" role="button" tabindex="0" @click="enregistrerTexte" v-else>{{ $t('valider') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'modifier-nom'">
+        <div class="modale">
+            <header>
+                <span class="titre">{{ $t('modifierNom') }}</span>
+                <span role="button" tabindex="0" class="fermer" @click="fermerModaleModifierNom"><i class="material-icons">close</i></span>
+            </header>
+            <div class="conteneur">
+                <div class="contenu">
+                    <label>{{ $t('votreNom') }}</label>
+                    <input type="text" maxlength="48" :value="nouveaunom" @input="nouveaunom = $event.target.value" @keydown.enter="modifierNom">
+                    <div class="actions">
+                        <span role="button" tabindex="0" class="bouton" @click="modifierNom">{{ $t('valider') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'debloquer-tableau'">
+        <div class="modale">
+            <header>
+                <span class="titre">{{ $t('debloquerTableau') }}</span>
+                <span class="fermer" role="button" tabindex="0" @click="fermerModaleDebloquer"><i class="material-icons">close</i></span>
+            </header>
+            <div class="conteneur">
+                <div class="contenu">
+                    <label>{{ $t('questionSecrete') }}</label>
+                    <select :value="question" @change="question = $event.target.value">
+                        <option value="" selected>-</option>
+                        <option v-for="(item, index) in questions" :value="item" :key="'option_' + index">{{ $t(item) }}</option>
+                    </select>
+                    <label>{{ $t('reponseSecrete') }}</label>
+                    <input type="password" :value="reponse" @input="reponse = $event.target.value" @keydown.enter="debloquerTableau">
+                    <div class="actions">
+                        <span class="bouton" role="button" tabindex="0" @click="debloquerTableau">{{ $t('valider') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'modifier-acces'">
+        <div class="modale">
+            <header>
+                <span class="titre">{{ $t('modifierAccesTableau') }}</span>
+                <span class="fermer" role="button" tabindex="0" @click="fermerModaleAcces"><i class="material-icons">close</i></span>
+            </header>
+            <div class="conteneur">
+                <div class="contenu">
+                    <label>{{ $t('questionSecreteActuelle') }}</label>
+                    <select :value="question" @change="question = $event.target.value">
+                        <option value="" selected>-</option>
+                        <option v-for="(item, index) in questions" :value="item" :key="'option_' + index">{{ $t(item) }}</option>
+                    </select>
+                    <label>{{ $t('reponseSecreteActuelle') }}</label>
+                    <input type="text" :value="reponse" @input="reponse = $event.target.value">
+                    <label>{{ $t('nouvelleQuestionSecrete') }}</label>
+                    <select :value="nouvellequestion" @change="nouvellequestion = $event.target.value">
+                        <option value="" selected>-</option>
+                        <option v-for="(item, index) in questions" :value="item" :key="'option_' + index">{{ $t(item) }}</option>
+                    </select>
+                    <label>{{ $t('nouvelleReponseSecrete') }}</label>
+                    <input type="text" :value="nouvellereponse" @input="nouvellereponse = $event.target.value" @keydown.enter="modifierAcces">
+                    <div class="actions">
+                        <span class="bouton" role="button" tabindex="0" @click="modifierAcces">{{ $t('modifier') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'importer'">
+        <div class="modale">
+            <header>
+                <span class="titre">{{ $t('importerTableau') }}</span>
+                <span class="fermer" role="button" tabindex="0" @click="modale = ''"><i class="material-icons">close</i></span>
+            </header>
+            <div class="conteneur">
+                <div class="contenu">
+                    <p>{{ $t('alerteImporter') }}</p>
+                    <input type="file" id="importer" name="importer" style="display: none;" accept=".zip" @change="importerTableau">
+                    <label for="importer" class="bouton large">{{ $t('selectionnerFichier') }}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'supprimer-tableau'">
+        <div class="modale confirmation">
+            <div class="conteneur">
+                <div class="contenu">
+                    <p v-html="$t('confirmationSupprimerTableau')" />
+                    <div class="actions">
+                        <span class="bouton" role="button" tabindex="0" @click="modale = ''">{{ $t('annuler') }}</span>
+                        <span class="bouton" role="button" tabindex="0" @click="supprimerTableau">{{ $t('valider') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'modifier-statut-utilisateur'">
+        <div class="modale confirmation">
+            <div class="conteneur">
+                <div class="contenu">
+                    <p v-html="donneesStatutUtilisateur.message" />
+                    <div class="actions">
+                        <span class="bouton" role="button" tabindex="0" @click="modale = ''">{{ $t('annuler') }}</span>
+                        <span class="bouton" role="button" tabindex="0" @click="modifierStatutUtilisateur">{{ $t('valider') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-else-if="modale === 'reinitialiser'">
+        <div class="modale confirmation">
+            <div class="conteneur">
+                <div class="contenu">
+                    <p v-html="$t('reinitialiserTableau')" />
+                    <div class="actions">
+                        <span class="bouton" role="button" tabindex="0" @click="modale = ''">{{ $t('annuler') }}</span>
+                        <span class="bouton" role="button" tabindex="0" @click="reinitialiser">{{ $t('valider') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteneur-modale" v-show="modaleCodeQr">
+        <div id="codeqr" class="modale">
+            <header>
+                <span class="titre">{{ $t('codeQR') }}</span>
+                <span role="button" tabindex="0" class="fermer" @click="modaleCodeQr = false"><i class="material-icons">close</i></span>
+            </header>
+            <div class="conteneur">
+                <div class="contenu">
+                    <div id="qr" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu droite" :class="{'ouvert': menu === 'utilisateurs'}">
+        <header>
+            <span class="titre">{{ $t('utilisateursConnectes') }}</span>
+            <span role="button" tabindex="0" class="fermer" @click="menu = ''"><i class="material-icons">close</i></span>
+        </header>
+        <div class="conteneur ascenseur">
+            <ul>
+                <template v-for="(utilisateur, indexUtilisateur) in utilisateurs">
+                    <li class="moi" @click="afficherModifierNom" v-if="utilisateur.identifiant === identifiant" :key="indexUtilisateur">
+                        <span class="utilisateur">{{ utilisateur.nom }} ({{ $t('moi') }})</span>
+                        <span class="icone" :title="$t('modifierNom')"><i class="material-icons">edit</i></span>
+                    </li>
+                    <li v-else :key="indexUtilisateur">
+                        <span class="utilisateur">{{ utilisateur.nom }}</span>
+                        <span class="icone" :title="$t('attribuerDroitsEdition')" v-if="admin && options.edition === 'fermee' && utilisateur.statut !== 'editeur'" @click="afficherModaleModifierStatutUtilisateur(utilisateur.identifiant, 'editeur')"><i class="material-icons">assignment_turned_in</i></span>
+                        <span class="icone" :title="$t('attribuerDroitsEdition')" v-else-if="admin && options.edition === 'fermee' && utilisateur.statut === 'editeur'" @click="afficherModaleModifierStatutUtilisateur(utilisateur.identifiant, 'participant')"><i class="material-icons">cancel</i></span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </div>
+
+    <div class="menu gauche" :class="{'ouvert': menu === 'parametres'}">
+        <header>
+            <span class="titre">{{ $t('parametresTableau') }}</span>
+            <span role="button" tabindex="0" class="fermer" @click="menu = ''"><i class="material-icons">close</i></span>
+        </header>
+        <div class="conteneur ascenseur">
+            <div class="section">
+                <label for="titre-tableau">{{ $t('titreTableau') }}</label>
+                <input id="titre-tableau" type="text" :value="titre" @keydown.enter="modifierTitre">
+            </div>
+            <div class="section section-bouton">
+                <span class="bouton" role="button" tabindex="0" @click="modifierTitre">{{ $t('enregistrer') }}</span>
+            </div>
+            <div class="section">
+                <label>{{ $t('lienEtCodeQR') }}</label>
+                <div id="copier-lien">
+                    <input type="text" disabled :value="hote + '/b/' + tableau">
+                    <span class="icone lien" role="button" tabindex="0" :title="$t('copierLien')"><i class="material-icons">content_copy</i></span>
+                    <span class="icone codeqr" role="button" tabindex="0" :title="$t('afficherCodeQR')" @click="modaleCodeQr = true"><i class="material-icons">qr_code</i></span>
+                </div>
+            </div>
+            <div class="section">
+                <label>{{ $t('codeIntegration') }}</label>
+                <div id="copier-code">
+                    <input type="text" disabled :value="'<iframe src=&quot;' + hote + '/b/' + tableau + '&quot; frameborder=&quot;0&quot; width=&quot;100%&quot; height=&quot;500&quot;></iframe>'">
+                    <span class="icone lien" role="button" tabindex="0" :title="$t('copierCode')"><i class="material-icons">content_copy</i></span>
+                </div>
+            </div>
+            <div class="section">
+                <label>{{ $t('langue') }}</label>
+                <div id="langues">
+                    <span role="button" tabindex="0" :class="{'selectionne': langue === 'fr'}" @click="modifierLangue('fr')">FR</span>
+                    <span role="button" tabindex="0" :class="{'selectionne': langue === 'en'}" @click="modifierLangue('en')">EN</span>
+                </div>
+            </div>
+            <div class="section fond">
+                <label>{{ $t('arrierePlan') }}</label>
+                <div id="fonds">
+                    <span v-for="(imageFond, indexImageFond) in fonds" @click="modifierFond(imageFond)" :key="indexImageFond">
+                        <img :src="'/img/vignettes/' + imageFond" :alt="'Fond' + (indexImageFond + 1)">
+                    </span>
+                    <span class="couleur-personnalisee">
+                        <input type="color" :value="options.fond" @change="modifierCouleurFond($event.target.value)" :title="$t('selectionnerCouleur')" v-if="options.fond.substring(0, 1) === '#'">
+                        <input type="color" value="#ffffff" @change="modifierCouleurFond($event.target.value)" :title="$t('selectionnerCouleur')" v-else>
+                    </span>
+                </div>
+            </div>
+            <div class="section">
+                <label>{{ $t('parametres') }}</label>
+				<div class="conteneur-interrupteur">
+					<span>{{ $t('modeMultiPage') }}</span>
+					<label class="bouton-interrupteur">
+						<input type="checkbox" :checked="options.multipage === 'oui'" @change="modifierMultiPage">
+						<span class="barre" />
+					</label>
+				</div>
+                <div class="conteneur-interrupteur">
+					<span>{{ $t('modeEdition') }}</span>
+					<label class="bouton-interrupteur">
+						<input type="checkbox" :checked="options.edition === 'ouverte'" @change="modifierEdition">
+						<span class="barre" />
+					</label>
+				</div>
+            </div>
+            <div class="section section-bouton">
+                <label>{{ $t('actions') }}</label>
+                <span class="bouton" role="button" tabindex="0" @click="exporterImage">{{ $t('exporterImage') }}</span>
+            </div>
+            <div class="section section-bouton">
+                <span class="bouton" role="button" tabindex="0" @click="exporterTableau">{{ $t('exporterTableau') }}</span>
+            </div>
+            <div class="section section-bouton">
+                <span class="bouton" role="button" tabindex="0" @click="afficherImporter">{{ $t('importerTableau') }}</span>
+            </div>
+            <div class="section section-bouton">
+                <span class="bouton" role="button" tabindex="0" @click="modale = 'modifier-acces'">{{ $t('modifierAccesTableau') }}</span>
+            </div>
+            <div class="section section-bouton">
+                <span class="bouton rouge" role="button" tabindex="0" @click="modale = 'supprimer-tableau'">{{ $t('supprimerTableau') }}</span>
+            </div>
+            <div class="section section-bouton">
+                <span class="bouton" role="button" tabindex="0" @click="terminerSession">{{ $t('terminerSession') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu haut" :class="{'ouvert': menu === 'pages'}">
+        <span role="button" tabindex="0" class="navigation gauche" :title="$t('afficherPagePrecedente')" @click="afficherPagePrecedente"><i class="material-icons">navigate_before</i></span>
+        <span role="button" tabindex="0" class="navigation droite" :title="$t('afficherPageSuivante')" @click="afficherPageSuivante"><i class="material-icons">navigate_next</i></span>
+        <draggable class="conteneur conteneur-pages" v-model="items" :delay="50" :delayOnTouchOnly="true" :swap-threshold="0.5" filter=".ajouter" @sort="deplacerPage" v-if="admin">
+            <div :id="'page' + indexPage" class="page" :class="{'selectionne': page === indexPage}" @click="afficherPage(indexPage)" v-for="(itemPage, indexPage) in items" :key="'page_' + indexPage">
+                <span class="texte">{{ indexPage + 1 }}</span>
+                <span role="button" tabindex="0" class="supprimer" :title="$t('supprimerPage')" @click="supprimerPage($event, indexPage)"><i class="material-icons">cancel</i></span>
+            </div>
+            <span role="button" tabindex="0" class="ajouter" :title="$t('ajouterPage')" @click="ajouterPage"><i class="material-icons">add_circle_outline</i></span>
+        </draggable>
+        <div class="conteneur conteneur-pages" v-else>
+            <div class="page" :class="{'selectionne': page === indexPage}" @click="afficherPage(indexPage)" v-for="(itemPage, indexPage) in items" :key="'page_' + indexPage">
+                <span class="texte">{{ indexPage + 1 }}</span>
+            </div>
+        </div>
+        <footer>
+            <span role="button" tabindex="0" class="fermer" :title="$t('fermerMenu')" @click="menu = ''"><i class="material-icons">expand_less</i></span>
+        </footer>
+    </div>
+</div>

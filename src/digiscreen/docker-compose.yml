@@ -1,0 +1,16 @@
+version: "3"
+services:
+ digiscreen:
+    image: digiscreen
+    container_name: digiscreen
+    ports:
+      - 4010:80
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

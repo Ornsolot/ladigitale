@@ -1,0 +1,16 @@
+version: "3"
+services:
+ digiflashcards:
+    image: digiflashcards
+    container_name: digiflashcards
+    ports:
+      - 4007:80
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

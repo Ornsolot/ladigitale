@@ -1,0 +1,31 @@
+FROM node:lts-bullseye-slim
+
+##################
+# SERVER SOURCES #
+##################
+ADD ./src/ /app/
+
+##########################
+# DATA BASE DEPENDENCIES #
+##########################
+RUN export DEBIAN_FRONTEND=nominteractive;                          \
+    apt-get -qq update -y &&                                        \
+    apt-get -qq install --no-install-recommends redis-server -y &&  \
+    apt-get -qq autoremove -y &&                                    \
+    apt-get -qq clean -y &&                                         \
+    service redis-server start
+
+#######################
+# SERVER DEPENDENCIES #
+#######################
+WORKDIR /app 
+RUN npm install &&              \
+    npm install nuxt &&         \
+    service redis-server restart
+
+###############
+# BOOT SERVER #
+###############
+EXPOSE 4009
+VOLUME /app/log
+CMD npm run build && service redis-server start && npm run start

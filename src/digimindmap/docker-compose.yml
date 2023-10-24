@@ -1,0 +1,16 @@
+version: "3"
+services:
+ digimindmap:
+    image: digimindmap
+    container_name: digimindmap
+    ports:
+      - 4008:80
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

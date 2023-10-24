@@ -1,0 +1,19 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+ 
+The format is based on [Keep a Changelog](http://keepachangelog.com/).
+ 
+### Added
+- Use of 8 applications in local networks.
+- Added websocket to app 8 to communicate with board-app.
+- Added Etherpad app.
+- Dockerfile and Docker-compose for each of the La Digitale applications as well as Etherpad.
+- Makefile to easily create docker's images and containers of the applications.
+- Added documentation on the use and installation of the application.
+ 
+### Changed
+- Switch to HTTP instead of HTTPS for applications.
+- Use of appache to host non-js projects.
+- Changed node version for lts 18.
+
+

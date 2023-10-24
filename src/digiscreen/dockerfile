@@ -1,0 +1,22 @@
+#########################################
+## PROJECT      : Balabox - ladigitale ##
+## DATE         : 2023                 ##
+## AUTHOR       : MONFORT Clément      ##
+##                HASCOËT Anthony      ##
+##                FLEJOU  MATÉO        ##
+#########################################
+FROM php:apache-bullseye
+
+####################
+# ENV DEPENDENCIES #
+####################
+RUN apt-get -qq update -y &&                                    \
+    apt-get -qq install --no-install-recommends sqlite3 -y &&   \
+    apt-get -qq autoremove -y &&                                \
+    apt-get -qq clean -y
+    
+####################
+# APP INSTALLATION #
+####################
+COPY ./src/ /var/www/html
+RUN chown -R www-data:www-data /var/www && sqlite3

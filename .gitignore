@@ -1,0 +1,38 @@
+# Project
+#########
+ladigitale.toml
+ladigitale.log
+
+# Directories
+#############
+**/bower_components/
+**/build/Release/
+**/jspm_packages/
+**/node_modules/
+**/lib-cov/
+**/vscode/
+**/dist/
+**/pids/
+
+# Files
+#######
+!settings.json.template
+**/package-lock.json
+**/*.node_repl_history
+**/*.lock-wscript
+**/*.eslintcache
+**/*.DS_Store
+**/*.pid.lock
+**/*minified*
+**/*.cache
+**/*.seed
+**/*.next
+**/*.nuxt
+**/*.env
+**/*.npm
+**/*.nfs
+**/*.tgz
+**/*.pid
+**/*.old
+**/*.db
+**/*~

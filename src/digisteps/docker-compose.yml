@@ -1,0 +1,16 @@
+version: "3"
+services:
+ digisteps:
+    image: digisteps
+    container_name: digisteps
+    ports:
+      - 4011:80
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

@@ -1,0 +1,372 @@
+.section h3 {
+	display: block;
+	width: 100%;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 10px;
+	line-height: 1.2;
+}
+
+#parametres.section {
+    margin: 0 auto 30px;
+}
+
+#parametres .conteneur-parametres {
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#parametres .parametre {
+	margin-right: 30px;
+}
+
+.conteneur-accordeon {
+	background: #fff;
+	border: 2px solid #eee;
+}
+
+.en-tete-accordeon {
+	display: flex;
+	justify-content: space-between;
+	padding: 20px;
+	background: #eee;
+	line-height: 1;
+}
+
+.en-tete-accordeon .titre {
+	display: flex;
+	align-items: center;
+	width: calc(100% - 19px);
+}
+
+.en-tete-accordeon .titre-question {
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0 5px;
+	width: calc(100% - 27px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.2;
+	cursor: pointer;
+}
+
+.contenu-accordeon {
+    display: none;
+}
+
+.section.accordeon,
+.contenu-accordeon .section {
+    margin-bottom: 25px!important;
+}
+
+.contenu-accordeon .section:first-child {
+	margin-top: 25px!important;
+}
+
+.contenu-accordeon .section h2 {
+    font-size: 17px!important;
+    color: #00ced1!important;
+}
+
+.accordeon .statut {
+	text-align: center;
+	font-size: 24px;
+	width: 24px;
+	cursor: pointer;
+}
+
+.accordeon .statut {
+	margin-right: -5px;
+}
+
+.description,
+.question {
+	position: relative;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.description .conteneur-textarea,
+.question .conteneur-textarea {
+	width: calc(100% - 30px);
+}
+
+.description .conteneur-textarea.media textarea,
+.item .conteneur-textarea.image textarea,
+.question .conteneur-textarea.image textarea {
+	border-top-right-radius: 0!important;
+	border-bottom-right-radius: 0!important;
+}
+
+.description .actions,
+.question .actions {
+	text-align: center;
+	font-size: 24px;
+	width: 30px;
+}
+
+.description .actions {
+	cursor: pointer;
+}
+
+.description .actions.media,
+.question .actions.image {
+	position: absolute;
+    right: 0;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	height: 100%;
+	cursor: pointer;
+}
+
+.description .actions.media.audio {
+	display: flex;
+    align-items: center;
+    border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+    background: #eee;
+}
+
+.bouton.dupliquer,
+.bouton.supprimer,
+#ajouter-question {
+	display: inline-block;
+	font-weight: 700;
+	font-size: 14px;
+	text-transform: uppercase;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 20px;
+	cursor: pointer;
+	border-radius: 5px;
+	letter-spacing: 1px;
+	text-indent: 1px;
+	transition: all ease-in 0.1s;
+}
+
+#ajouter-question {
+	color: #001d1d;
+	background: #00ced1;
+	width: 100%;
+	text-align: center;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.bouton.dupliquer {
+	color: #001d1d;
+	background: #00ced1;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.bouton.dupliquer:hover,
+#ajouter-question:hover {
+	background: #001d1d;
+	color: #fff;
+}
+
+.bouton.supprimer + .bouton.dupliquer {
+	margin-left: 15px;
+}
+
+.bouton.supprimer {
+	color: #fff;
+	background: #ff6259;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.bouton.supprimer:hover {
+	background: #d70b00;
+}
+
+.item {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 15px;
+	z-index: 1;
+}
+
+.accordeon.sortable-chosen.sortable-ghost,
+.item.sortable-chosen.sortable-ghost {
+	opacity: 0!important;
+}
+
+.accordeon.sortable-chosen.sortable-drag,
+.item.sortable-chosen.sortable-drag {
+	z-index: 2!important;
+}
+
+.accordeon .poignee-accordeon,
+.item .poignee {
+	text-align: center;
+	font-size: 24px;
+	width: 24px;
+	cursor: move;
+}
+
+.item .reponse {
+	text-align: center;
+	font-size: 24px;
+	width: 24px;
+	cursor: pointer;
+	margin-right: 4px;
+}
+
+.accordeon .poignee-accordeon {
+	margin-left: -7px;
+}
+
+#sondage .item .conteneur-textarea {
+	width: calc(100% - 84px);
+}
+
+#questionnaire .item .conteneur-textarea {
+	width: calc(100% - 112px);
+}
+
+#questionnaire .retroaction .conteneur-textarea {
+	margin-bottom: 15px;
+}
+
+#questionnaire .retroaction .conteneur-textarea:last-child {
+	margin-bottom: 0;
+}
+
+#questionnaire .retroaction label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.item .actions {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	font-size: 24px;
+	width: 60px;
+}
+
+.question .actions label,
+.item .actions label,
+.item .actions span {
+	cursor: pointer;
+}
+
+.item .actions .image {
+	position: absolute;
+	width: 30px;
+    right: 30px;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	height: 100%;
+	cursor: pointer;
+}
+
+.item .actions .image + span {
+	margin-left: 28px;
+}
+
+.accordeon .poignee-accordeon.desactive,
+.item .poignee.desactive,
+.item .actions span.desactive {
+	color: #aaa;
+	cursor: default;
+}
+
+.ajouter {
+	display: block;
+	text-align: center;
+	width: 60px;
+    font-size: 36px;
+	cursor: pointer;
+	line-height: 1;
+    color: #00ced1;
+    margin: 0 auto;
+	cursor: pointer;
+}
+
+#modale-media img,
+#modale-image img {
+	max-height: calc(90vh - 145px);
+}
+
+#modale-media label,
+#modale-image label {
+	display: inline-block;
+	width: auto;
+	margin-bottom: 0;
+}
+
+#modale-ajouter-media .valider {
+	display: flex;
+}
+
+#modale-ajouter-media .valider input {
+	margin-bottom: 0;
+}
+
+#modale-ajouter-media .valider .bouton-secondaire {
+	display: inline-block;
+	font-size: 36px;
+	cursor: pointer;
+	color: #00ced1;
+	user-select: none;
+    margin-left: 5px;
+    height: 46px;
+}
+
+#modale-ajouter-media .valider .bouton-secondaire i {
+    line-height: 46px;
+}
+
+#modale-ajouter-media .separateur {
+    position: relative;
+    margin: 20px 25% 20px;
+    text-align: center;
+    width: 50%;
+}
+
+#modale-ajouter-media .separateur::before {
+    position: absolute;
+    top: 50%;
+    display: block;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+#modale-ajouter-media .separateur span {
+    position: relative;
+    margin: 0;
+    font-size: 16px;
+    z-index: 2;
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+    vertical-align: middle;
+    background-color: #fff;
+}
+
+#modale-ajouter-media .bouton {
+    text-align: center;
+}
+
+@media screen and (max-width: 399px) {
+	.bouton.dupliquer,
+	.bouton.supprimer {
+		width: 100%;
+		margin-left: 0;
+		text-align: center;
+	}
+}

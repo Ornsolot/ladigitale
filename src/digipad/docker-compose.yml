@@ -1,0 +1,19 @@
+version: "3"
+services:  
+  digipad:
+    image: digipad
+    container_name: digipad
+    ports:
+      - 4009:4009
+    volumes:
+      - ./src:/app/
+    networks:
+      - balabox-network
+    links:
+      - etherpad
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

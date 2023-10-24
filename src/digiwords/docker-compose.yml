@@ -1,0 +1,16 @@
+version: "3"
+services:  
+  digiwords:
+    image: digiwords
+    container_name: digiwords
+    ports:
+      - 4013:80
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge
+  

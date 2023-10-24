@@ -1,0 +1,17 @@
+version: "3"
+services:  
+  etherpad:
+    image: etherpad
+    container_name: etherpad
+    ports:
+      - 4014:9001
+    volumes:
+      - ./src:/app/
+    networks:
+      - balabox-network
+    links:
+      - webapp
+
+networks:
+  balabox-network:
+    driver: bridge

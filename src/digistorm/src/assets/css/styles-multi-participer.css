@@ -1,0 +1,270 @@
+#sondage,
+#questionnaire {
+	width: 100%;
+	max-width: 1024px;
+	padding: 0 20px;
+	margin: 40px auto 40px;
+}
+
+#progression {
+	padding-bottom: 15px;
+	border-bottom: 1px solid #ddd;
+	font-weight: 700;
+}
+
+#progression + #support {
+	margin-top: 10px;
+}
+
+#progression + #description {
+	margin-top: 40px;
+}
+
+#support {
+	text-align: right;
+}
+
+#support span {
+	font-size: 14px;
+	color: #00ced1;
+	cursor: pointer;
+}
+
+#description .description,
+#questions .question {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 2.7rem;
+	line-height: 1.25;
+	text-align: center;
+	white-space: pre-line;
+}
+
+#description .description {
+	font-weight: 400;
+}
+
+#questions.avec-progression {
+	margin-top: 40px;
+}
+
+#questions .question {
+	font-weight: 700;
+}
+
+#description .description + .support {
+	margin-top: 40px;
+}
+
+#description .support img {
+	max-width: 100%;
+	max-height: 30rem;
+	border-radius: 5px;
+	cursor: zoom-in;
+}
+
+#description .support audio{
+	width: 100%;
+}
+
+#description .support .video {
+    position: relative;
+	width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+#description .support .video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+	bottom: 0;
+	right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#questions .question-et-support {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#questions .question-et-support .question {
+	width: calc(100% - (10rem + 20px));
+}
+
+#questions .question-et-support .support {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 0;
+	width: 10rem;
+	height: 10rem;
+	margin-left: 20px;
+	cursor: zoom-in;
+}
+
+#questions .question-et-support .support img {
+	max-width: 10rem;
+	max-height: 10rem;
+	border-radius: 5px;
+}
+
+#description .support,
+#questions .support {
+	text-align: center;
+}
+
+#questions .support img {
+	max-width: 100%;
+	max-height: 20rem;
+	border-radius: 5px;
+	cursor: zoom-in;
+}
+
+#questions .items {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	width: 100%;
+	margin-top: 40px;
+}
+
+#questions .items .item {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	border: 1px solid #ddd;
+	padding: 15px 20px;
+	border-radius: 1em;
+	margin: 0 0 20px;
+	width: 100%;
+	cursor: pointer;
+	transition: background-color ease-in 0.1s;
+}
+
+#questions .bouton.desactive,
+#questions .items .item.desactive {
+	cursor: default;
+}
+
+#questions .items .item:not(.desactive):hover {
+	background: #f3f5f8;
+}
+
+#questions .items .item.correct {
+	background: #d5eee1;
+	border-color: #00a695;
+	box-shadow: 0 0 0 1px #00a695;
+}
+
+#questions .items .item .icone {
+	margin-right: 20px;
+	font-size: 24px;
+}
+
+#questions .items .item .image {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 0;
+	width: 10rem;
+	height: 10rem;
+	margin-right: 20px;
+	cursor: zoom-in;
+}
+
+#questions .items .item .image img {
+	max-width: 10rem;
+	max-height: 10rem;
+	border-radius: 5px;
+}
+
+#questions .items .item .texte {
+	font-size: 2.3rem;
+	font-weight: 400;
+	line-height: 1.25;
+	white-space: pre-line;
+}
+
+#questions .items .item .icone + .texte {
+	width: calc(100% - 44px);
+}
+
+#questions .items .item .image + .texte {
+	width: calc(100% - (10rem + 64px));
+}
+
+#questions .actions {
+	text-align: center;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#questions .actions .bouton {
+	display: inline-block;
+	font-weight: 700;
+	font-size: 18px;
+	text-transform: uppercase;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 50px;
+	cursor: pointer;
+	color: #001d1d;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+	background: #00ced1;
+	border-radius: 2em;
+	letter-spacing: 1px;
+	text-indent: 1px;
+	transition: all 0.1s ease-in;
+}
+
+#questions .actions .bouton:hover {
+	background: #001d1d;
+	color: #fff;
+}
+
+#questions .actions .bouton-reponse {
+	color: #fff;
+	background: #009688;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+#questions .actions .bouton-reponse.desactive {
+	background: #aaa;
+}
+
+#questions .actions .bouton-reponse:not(.desactive):hover {
+	background: #00a695;
+}
+
+#questions .actions .reponse {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #00ced1;
+	line-height: 1;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#questions .retroaction span {
+    display: block;
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#questions .actions .reponse + .bouton,
+#questions .retroaction + .actions {
+	margin-top: 40px;
+}
+
+#modale-media img,
+#modale-image img {
+	max-height: calc(90vh - 100px);
+}

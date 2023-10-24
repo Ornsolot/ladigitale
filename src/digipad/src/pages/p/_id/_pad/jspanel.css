@@ -1,0 +1,459 @@
+.jsPanel {
+	vertical-align: baseline;
+	font-weight: normal;
+	display: flex;
+	flex-direction: column;
+	opacity: 0;
+	overflow: visible;
+	position: absolute;
+	z-index: 100;
+}
+
+.jsPanel .jsPanel-hdr {
+    border: 0;
+    vertical-align: baseline;
+    font-weight: normal;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+	line-height: 1.1;
+	background-color: #fff!important;
+	color: #001d1d!important;
+	border-bottom: 1px solid #ddd;
+}
+
+.jsPanel .jsPanel-content {
+	position: relative;
+	display: flex;
+    justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	flex-grow: 1;
+    border: 0;
+    vertical-align: baseline;
+    font-weight: normal;
+    background: #ffffff;
+    font-size: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+	outline: none!important;
+}
+
+.jsPanel .jsPanel-content .image {
+	font-size: 0;
+	outline: none!important;
+}
+
+.jsPanel .jsPanel-content img {
+	max-width: 100%;
+	align-self: center;
+}
+
+.jsPanel .jsPanel-content audio {
+	width: calc(100% - 2rem);
+	margin: 0 1rem;
+}
+
+.jsPanel .jsPanel-content iframe {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+	bottom: 0;
+	width: 100%;
+    height: 100%;
+}
+
+.jsPanel .jsPanel-content .html {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+    height: 100%;
+}
+
+.jsPanel .jsPanel-content .html blockquote {
+    font-size: 16px;
+}
+
+.jsPanel-headerbar {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	height: 3.7rem;
+}
+
+.jsPanel-titlebar {
+	display: flex;
+	align-items: center;
+	font-size: 1rem;
+	flex: 1 1 0px;
+	cursor: move;
+	height: 100%;
+	overflow: hidden;
+}
+
+.jsPanel-titlebar .jsPanel-title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: 700;
+	margin: 0 1rem 0 1rem;
+	min-width: 0;
+	color: #001d1d!important;
+	font-size: 14px;
+    text-transform: uppercase;
+}
+
+.jsPanel-titlebar .jsPanel-title small {
+	font-size: 70%;
+	color: inherit;
+}
+
+.jsPanel-controlbar {
+	display: flex;
+	align-items: center;
+	touch-action: none;
+	margin: 0 1rem 0 0;
+}
+
+.jsPanel-controlbar .jsPanel-btn {
+	cursor: pointer;
+	touch-action: none;
+	border-radius: 3px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	background-color: transparent;
+	box-shadow: none;
+	color: #001d1d!important;
+	margin-right: 0.5rem;
+}
+
+.jsPanel-controlbar .jsPanel-btn:last-child {
+	margin-right: 0;
+}
+
+.jsPanel-controlbar .jsPanel-btn a,
+.jsPanel-controlbar .jsPanel-btn span {
+	vertical-align: middle;
+}
+
+.jsPanel-controlbar .jsPanel-btn a.material-icons,
+.jsPanel-controlbar .jsPanel-btn span.material-icons {
+	font-size: 24px;
+}
+
+.jsPanel-hdr-toolbar {
+	display: none;
+	width: auto;
+	height: auto;
+}
+
+.jsPanel-hdr-toolbar.active {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	padding: 3px 8px;
+}
+
+#jsPanel-replacement-container,
+.jsPanel-minimized-box,
+.jsPanel-minimized-container {
+	display: flex;
+	flex-flow: row wrap-reverse;
+	background: transparent none repeat scroll 0 0;
+	bottom: 0;
+	height: auto;
+	left: 0;
+	position: fixed;
+	width: auto;
+	z-index: 9998;
+}
+
+#jsPanel-replacement-container .jsPanel-replacement,
+.jsPanel-minimized-box .jsPanel-replacement,
+.jsPanel-minimized-container .jsPanel-replacement {
+	display: flex;
+	align-items: center;
+	width: 200px;
+	height: 34px;
+	margin: 1px 1px 0 0;
+	z-index: 9999;
+}
+
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr,
+.jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr,
+.jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr {
+	flex-grow: 1;
+	min-width: 0;
+	padding: 0;
+}
+
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo,
+.jsPanel-minimized-box .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo,
+.jsPanel-minimized-container .jsPanel-replacement .jsPanel-hdr .jsPanel-headerlogo {
+	max-width: 50%;
+	overflow: hidden;
+}
+
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar,
+.jsPanel-minimized-box .jsPanel-replacement .jsPanel-titlebar,
+.jsPanel-minimized-container .jsPanel-replacement .jsPanel-titlebar {
+	cursor: default;
+	min-width: 0;
+}
+
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize,
+.jsPanel-minimized-box .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize,
+.jsPanel-minimized-container .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize {
+	display: block;
+}
+
+.jsPanel-minimized-box,
+.jsPanel-minimized-container {
+	position: absolute;
+	width: 100%;
+	overflow: hidden;
+}
+
+.flexOne {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.jsPanel-resizeit-handle {
+	display: block;
+	font-size: 0.1px;
+	position: absolute;
+	touch-action: none;
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-n {
+	cursor: n-resize;
+	height: 12px;
+	left: 9px;
+	top: -5px;
+	width: calc(100% - 18px);
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-e {
+	cursor: e-resize;
+	height: calc(100% - 18px);
+	right: -9px;
+	top: 9px;
+	width: 12px;
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-s {
+	bottom: -9px;
+	cursor: s-resize;
+	height: 12px;
+	left: 9px;
+	width: calc(100% - 18px);
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-w {
+	cursor: w-resize;
+	height: calc(100% - 18px);
+	left: -9px;
+	top: 9px;
+	width: 12px;
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-ne {
+	cursor: ne-resize;
+	height: 18px;
+	right: -9px;
+	top: -9px;
+	width: 18px;
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-se {
+	bottom: -9px;
+	cursor: se-resize;
+	height: 18px;
+	right: -9px;
+	width: 18px;
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-sw {
+	bottom: -9px;
+	cursor: sw-resize;
+	height: 18px;
+	left: -9px;
+	width: 18px;
+}
+
+.jsPanel-resizeit-handle.jsPanel-resizeit-nw {
+	cursor: nw-resize;
+	height: 18px;
+	left: -9px;
+	top: -9px;
+	width: 18px;
+}
+
+.jsPanel-drag-overlay {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.jsPanel-depth-1 {
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.jsPanel-depth-2 {
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.jsPanel-depth-3 {
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.jsPanel-depth-4 {
+	box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+.jsPanel-depth-5 {
+	box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3), 0 20px 14px rgba(0, 0, 0, 0.22);
+}
+
+.jsPanel-snap-area {
+	position: fixed;
+	background: black;
+	opacity: .2;
+	border: 1px solid silver;
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5), 0 10px 10px rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+}
+
+.jsPanel-snap-area-lt,
+.jsPanel-snap-area-lc,
+.jsPanel-snap-area-lb,
+.jsPanel-snap-area-left-top,
+.jsPanel-snap-area-left-center,
+.jsPanel-snap-area-left-bottom {
+	left: 0;
+}
+
+.jsPanel-snap-area-ct,
+.jsPanel-snap-area-cb {
+	left: 37.5%;
+}
+
+.jsPanel-snap-area-rt,
+.jsPanel-snap-area-rc,
+.jsPanel-snap-area-rb,
+.jsPanel-snap-area-right-top,
+.jsPanel-snap-area-right-center,
+.jsPanel-snap-area-right-bottom {
+	right: 0;
+}
+
+.jsPanel-snap-area-lt,
+.jsPanel-snap-area-ct,
+.jsPanel-snap-area-rt,
+.jsPanel-snap-area-left-top,
+.jsPanel-snap-area-center-top,
+.jsPanel-snap-area-right-top {
+	top: 0;
+}
+
+.jsPanel-snap-area-lc,
+.jsPanel-snap-area-rc {
+    top: 37.5%;
+    height: 25%;
+}
+
+.jsPanel-snap-area-cb,
+.jsPanel-snap-area-center-bottom,
+.jsPanel-snap-area-lb,
+.jsPanel-snap-area-left-bottom,
+.jsPanel-snap-area-rb,
+.jsPanel-snap-area-right-bottom {
+    bottom: 0;
+}
+
+.jsPanel-snap-area-cb,
+.jsPanel-snap-area-ct {
+    width: 25%;
+}
+
+.jsPanel-snap-area-left-top,
+.jsPanel-snap-area-lt {
+    border-bottom-right-radius: 100%;
+}
+
+.jsPanel-snap-area-right-top,
+.jsPanel-snap-area-rt {
+    border-bottom-left-radius: 100%;
+}
+
+.jsPanel-snap-area-rb,
+.jsPanel-snap-area-right-bottom {
+    border-top-left-radius: 100%;
+}
+
+.jsPanel-snap-area-lb,
+.jsPanel-snap-area-left-bottom {
+    border-top-right-radius: 100%;
+}
+
+@keyframes jsPanelFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.jsPanelFadeIn {
+    opacity: 0;
+    animation: jsPanelFadeIn ease-in;
+    animation-fill-mode: forwards;
+    animation-duration: 0.2s;
+}
+
+@keyframes jsPanelFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.jsPanelFadeOut {
+    animation: jsPanelFadeOut ease-out;
+    animation-fill-mode: forwards;
+    animation-duration: 0.2s;
+}
+
+.jsPanel-addCloseCtrl {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: .8rem;
+    height: .8rem;
+    margin: 2px;
+    cursor: pointer;
+    line-height: .8rem;
+    padding: 0;
+    z-index: 100;
+    border: 0;
+    background-color: transparent;
+}
+
+.jsPanel-content.jsPanel-content-noheader {
+    border: none!important;
+}
+
+body {
+    -ms-overflow-style: scrollbar;
+}
+
+@media print {
+	.jsPanel {
+		display: none!important;
+	}
+}

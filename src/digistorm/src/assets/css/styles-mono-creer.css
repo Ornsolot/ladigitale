@@ -1,0 +1,131 @@
+.question {
+	position: relative;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.question .conteneur-textarea {
+	width: calc(100% - 30px);
+}
+
+.question .conteneur-textarea.media textarea {
+	border-top-right-radius: 0!important;
+	border-bottom-right-radius: 0!important;
+}
+
+.question .actions {
+	text-align: center;
+	font-size: 24px;
+	width: 30px;
+	cursor: pointer;
+}
+
+.question .actions.media {
+	position: absolute;
+    right: 0;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	height: 100%;
+	cursor: pointer;
+}
+
+.question .actions.media.audio {
+	display: flex;
+    align-items: center;
+    border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+    background: #eee;
+}
+
+#parametres.section {
+    margin: 0 auto 30px;
+}
+
+#parametres .conteneur-parametres {
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#parametres .parametre {
+	margin-right: 30px;
+}
+
+#parametres.section h3 {
+	display: block;
+	width: 100%;
+	font-weight: 700;
+	font-size: 17px;
+	margin-bottom: 10px;
+	line-height: 1.2;
+}
+
+#modale-media img {
+	max-height: calc(90vh - 145px);
+}
+
+#modale-media label {
+	display: inline-block;
+	width: auto;
+	margin-bottom: 0;
+}
+
+#modale-ajouter-media .valider {
+	display: flex;
+}
+
+#modale-ajouter-media .valider input {
+	margin-bottom: 0;
+}
+
+#modale-ajouter-media .valider .bouton-secondaire {
+	display: inline-block;
+	font-size: 36px;
+	cursor: pointer;
+	color: #00ced1;
+	user-select: none;
+    margin-left: 5px;
+    height: 46px;
+}
+
+#modale-ajouter-media .valider .bouton-secondaire i {
+    line-height: 46px;
+}
+
+#modale-ajouter-media .separateur {
+    position: relative;
+    margin: 20px 25% 20px;
+    text-align: center;
+    width: 50%;
+}
+
+#modale-ajouter-media .separateur::before {
+    position: absolute;
+    top: 50%;
+    display: block;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+#modale-ajouter-media .separateur span {
+    position: relative;
+    margin: 0;
+    font-size: 16px;
+    z-index: 2;
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+    vertical-align: middle;
+    background-color: #fff;
+}
+
+#modale-ajouter-media .bouton {
+    text-align: center;
+}
